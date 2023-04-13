@@ -2,49 +2,39 @@ import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:music_app/allsongs_screens/gridview_song.dart';
 import 'package:music_app/allsongs_screens/lists_view_songs.dart';
+import 'package:music_app/providers/all_song_provider.dart';
 import 'package:music_app/controller/get_all_song_controller.dart';
-import 'package:music_app/database/favoritedb.dart';
 import 'package:music_app/home_screen.dart';
-
+import 'package:music_app/providers/favourite_db.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-import 'package:permission_handler/permission_handler.dart';
-
+import 'package:provider/provider.dart';
 import 'mini_player.dart';
 
-class AllSongs extends StatefulWidget {
-  const AllSongs({super.key});
-
-  @override
-  State<AllSongs> createState() => _AllSongsState();
-}
-
-bool isGrid = false;
 List<SongModel> startSongs = [];
 
-class _AllSongsState extends State<AllSongs> {
+// ignore: must_be_immutable
+class AllSongs extends StatelessWidget {
+  AllSongs({super.key});
+
+  bool isGrid = false;
+
   final OnAudioQuery audioQuery = OnAudioQuery();
   final AudioPlayer audioPlayer = AudioPlayer();
   bool isFavorite = false;
   bool isFav = false;
   List<SongModel> allSongs = [];
 
-  @override
-  void initState() {
-    super.initState();
-    requestPermission();
-  }
-
-  void requestPermission() async {
-    bool permissionStatus = await audioQuery.permissionsStatus();
-    if (!permissionStatus) {
-      await audioQuery.permissionsRequest();
-    }
-    setState(() {});
-    Permission.storage.request();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   requestPermission();
+  // }
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<AllsongsProvider>(context, listen: false).requestPermission();
+    });
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 141, 12, 167),
@@ -52,9 +42,10 @@ class _AllSongsState extends State<AllSongs> {
         actions: [
           IconButton(
               onPressed: () {
-                setState(() {
-                  isGrid = !isGrid;
-                });
+                Provider.of<FavoriteDb>(context, listen: false).gridList();
+                // setState(() {
+                //   isGrid = !isGrid;
+                // });
               },
               icon: isGrid
                   ? const Icon(
@@ -90,8 +81,10 @@ class _AllSongsState extends State<AllSongs> {
                   return const Center(child: Text("No Songs Found!!"));
                 }
                 startSongs = item.data!;
-                if (!FavoriteDb.isInitialized) {
-                  FavoriteDb.initialize(item.data!);
+                if (!Provider.of<FavoriteDb>(context, listen: false)
+                    .isInitialized) {
+                  Provider.of<FavoriteDb>(context, listen: false)
+                      .initialize(item.data!);
                 }
                 GetAllSongController.songscopy = item.data!;
                 return !isGrid

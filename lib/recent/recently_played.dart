@@ -1,44 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:music_app/allsongs_screens/lists_view_songs.dart';
-import 'package:music_app/database/favoritedb.dart';
 import 'package:music_app/controller/recent_song_controller.dart';
+import 'package:music_app/providers/favourite_db.dart';
+import 'package:music_app/providers/recently_provider.dart';
 import 'package:on_audio_query/on_audio_query.dart';
+import 'package:provider/provider.dart';
 
-class RecentlyPlayed extends StatefulWidget {
-  const RecentlyPlayed({super.key});
+class RecentlyPlayed extends StatelessWidget {
+  RecentlyPlayed({super.key});
 
-  @override
-  State<RecentlyPlayed> createState() => _RecentlyPlayedState();
-}
-
-class _RecentlyPlayedState extends State<RecentlyPlayed> {
   final OnAudioQuery audioQuery = OnAudioQuery();
   static List<SongModel> recentSong = [];
 
-  @override
-  void initState() {
-    init();
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   init();
+  //   super.initState();
+  // }
 
-  Future init() async {
-    await GetRecentSongController.getRecentSongs();
-  }
+  // Future init() async {
+  //   await GetRecentSongController.getRecentSongs();
+  // }
 
   @override
   Widget build(BuildContext context) {
-    FavoriteDb.favoriteSongs;
+    Provider.of<FavoriteDb>(context, listen: false).favoriteSongs;
     return Scaffold(
       body: SizedBox(
         width: double.infinity,
         height: double.infinity,
         child: FutureBuilder(
-            future: GetRecentSongController.getRecentSongs(),
+            future: Provider.of<Recentlyprovider>(context, listen: false)
+                .getRecentSongs(),
             builder: (context, items) {
-              return ValueListenableBuilder(
-                valueListenable: GetRecentSongController.recentSongNotifier,
-                builder: (context, List<SongModel> value, Widget? child) {
-                  if (value.isEmpty) {
+              return Consumer<Recentlyprovider>(
+                builder: (context, value, Widget? child) {
+                  if (value.recentSongNotifier.isEmpty) {
                     return const Center(
                       child: Text(
                         'No Recent Songs',
@@ -47,7 +44,7 @@ class _RecentlyPlayedState extends State<RecentlyPlayed> {
                       ),
                     );
                   } else {
-                    final temp = value.reversed.toList();
+                    final temp = value.recentSongNotifier.reversed.toList();
                     recentSong = temp.toSet().toList();
                     return FutureBuilder<List<SongModel>>(
                         future: audioQuery.querySongs(

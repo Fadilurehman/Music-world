@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:music_app/database/model_db.dart';
-import 'package:music_app/playlist/playlist_db.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/playlist_provider.dart';
 
 Future moredialogplaylist(
     context, index, musicList, formkey, playlistnamectrl, MusicWorld data) {
@@ -202,7 +204,7 @@ Future editplaylist(
             ),
             SimpleDialogOption(
               onPressed: () {
-                updateplaylistname(index, formkey, playlistnamectrl);
+                updateplaylistname(index, formkey, playlistnamectrl, context);
                 Navigator.of(context).pop();
               },
               child: const Text(
@@ -220,14 +222,15 @@ Future editplaylist(
   );
 }
 
-void updateplaylistname(index, formkey, playlistnamectrl) {
+void updateplaylistname(index, formkey, playlistnamectrl, context) {
   if (formkey.currentState!.validate()) {
     final names = playlistnamectrl.text.trim();
     if (names.isEmpty) {
       return;
     } else {
       final playlistnam = MusicWorld(name: names, songId: []);
-      PlaylistDb.editPlaylist(index, playlistnam);
+      Provider.of<PlayListProvider>(context, listen: false)
+          .editPlaylist(index, playlistnam);
     }
   }
 }

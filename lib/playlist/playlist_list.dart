@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart%20';
 import 'package:music_app/controller/get_all_song_controller.dart';
-import 'package:music_app/controller/recent_song_controller.dart';
 import 'package:music_app/database/model_db.dart';
 import 'package:music_app/home_screen.dart';
 import 'package:music_app/playing_screen/now_playing.dart';
 import 'package:music_app/playlist/playlist_add_songs.dart';
-import 'package:music_app/provider/song_model_provider.dart';
+import 'package:music_app/providers/recently_provider.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
+import '../song_provider/song_model_provider.dart';
 
 class SinglePlaylist extends StatelessWidget {
   const SinglePlaylist({
@@ -195,8 +195,10 @@ class SinglePlaylist extends StatelessWidget {
                                               GetAllSongController
                                                   .createSongList(songPlaylist),
                                               initialIndex: index);
-                                      GetRecentSongController.addRecentlyPlayed(
-                                          songPlaylist[index].id);
+                                      Provider.of<Recentlyprovider>(context,
+                                              listen: false)
+                                          .addRecentlyPlayed(
+                                              songPlaylist[index].id);
                                       context
                                           .read<SongModelProvider>()
                                           .setId(songPlaylist[index].id);

@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:music_app/allsongs_screens/songstoplaylist.dart';
 import 'package:music_app/controller/get_all_song_controller.dart';
-import 'package:music_app/controller/most_played_song.dart';
-import 'package:music_app/database/favoritedb.dart';
 import 'package:music_app/home_screen.dart';
-import 'package:music_app/provider/song_model_provider.dart';
-import 'package:music_app/controller/recent_song_controller.dart';
+import 'package:music_app/providers/favourite_db.dart';
+import 'package:music_app/providers/mostly_played_provider.dart';
+import 'package:music_app/providers/recently_provider.dart';
+import 'package:music_app/song_provider/song_model_provider.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import '../playing_screen/now_playing.dart';
 
-class ListViewScreen extends StatefulWidget {
-  const ListViewScreen(
+class ListViewScreen extends StatelessWidget {
+  ListViewScreen(
       {super.key,
       required this.songModel,
       this.recentLength,
@@ -23,18 +23,13 @@ class ListViewScreen extends StatefulWidget {
   final bool isRecent;
   final bool isMostly;
 
-  @override
-  State<ListViewScreen> createState() => _ListViewScreenState();
-}
-
-class _ListViewScreenState extends State<ListViewScreen> {
   List<SongModel> allSongs = [];
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       shrinkWrap: true,
       itemBuilder: (context, index) {
-        allSongs.addAll(widget.songModel);
+        allSongs.addAll(songModel);
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           child: Container(
@@ -54,7 +49,7 @@ class _ListViewScreenState extends State<ListViewScreen> {
             ),
             child: ListTile(
               leading: QueryArtworkWidget(
-                id: widget.songModel[index].id,
+                id: songModel[index].id,
                 type: ArtworkType.AUDIO,
                 artworkWidth: 50,
                 artworkHeight: 50,
@@ -76,40 +71,38 @@ class _ListViewScreenState extends State<ListViewScreen> {
                 ),
               ),
               title: Text(
-                widget.songModel[index].displayNameWOExt,
+                songModel[index].displayNameWOExt,
                 style: title,
                 maxLines: 1,
               ),
               subtitle: Text(
-                widget.songModel[index].artist.toString(),
+                songModel[index].artist.toString(),
                 style: artistStyle,
                 maxLines: 1,
               ),
               trailing: Wrap(
                 children: [
-                  ValueListenableBuilder(
-                    valueListenable: FavoriteDb.favoriteSongs,
-                    builder: (context, List<SongModel> favoriteData, child) {
+                  Consumer<FavoriteDb>(
+                    builder: (context, favorite, child) {
                       return IconButton(
                         onPressed: () {
-                          if (FavoriteDb.isFavor(widget.songModel[index])) {
-                            FavoriteDb.delete(widget.songModel[index].id);
+                          if (favorite.isFavor(songModel[index])) {
+                            favorite.delete(songModel[index].id);
                             const remove = SnackBar(
                               content: Text('Song removed from favorites'),
                               duration: Duration(seconds: 1),
                             );
                             ScaffoldMessenger.of(context).showSnackBar(remove);
                           } else {
-                            FavoriteDb.add(widget.songModel[index]);
+                            favorite.add(songModel[index]);
                             const addFav = SnackBar(
                               content: Text('Song added to favorites'),
                               duration: Duration(seconds: 1),
                             );
                             ScaffoldMessenger.of(context).showSnackBar(addFav);
                           }
-                          FavoriteDb.favoriteSongs.notifyListeners();
                         },
-                        icon: FavoriteDb.isFavor(widget.songModel[index])
+                        icon: favorite.isFavor(songModel[index])
                             ? const Icon(
                                 Icons.favorite,
                                 color: Colors.red,
@@ -137,8 +130,8 @@ class _ListViewScreenState extends State<ListViewScreen> {
                                       IconButton(
                                           onPressed: () {
                                             Navigator.pop(context);
-                                            playlistDialogue(context,
-                                                widget.songModel[index]);
+                                            playlistDialogue(
+                                                context, songModel[index]);
                                           },
                                           icon: const Icon(
                                             Icons.playlist_add,
@@ -214,23 +207,21 @@ class _ListViewScreenState extends State<ListViewScreen> {
               ),
               onTap: () {
                 GetAllSongController.audioPlayer.setAudioSource(
-                  GetAllSongController.createSongList(widget.songModel),
+                  GetAllSongController.createSongList(songModel),
                   initialIndex: index,
                 );
-                GetMostlyPlayedController.addMostlyPlayed(
-                    widget.songModel[index].id);
-                GetRecentSongController.addRecentlyPlayed(
-                    widget.songModel[index].id);
-                context
-                    .read<SongModelProvider>()
-                    .setId(widget.songModel[index].id);
+                Provider.of<MostlyProvider>(context, listen: false)
+                    .addMostlyPlayed(songModel[index].id);
+                Provider.of<Recentlyprovider>(context, listen: false)
+                    .addRecentlyPlayed(songModel[index].id);
+                context.read<SongModelProvider>().setId(songModel[index].id);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => NowPlaying(
-                      songModel: widget.songModel,
+                      songModel: songModel,
                       // audioPlayer: _audioPlayer,
-                      count: widget.songModel.length,
+                      count: songModel.length,
                     ),
                   ),
                 );
@@ -239,9 +230,7 @@ class _ListViewScreenState extends State<ListViewScreen> {
           ),
         );
       },
-      itemCount: widget.isRecent || widget.isMostly
-          ? widget.recentLength
-          : widget.songModel.length,
+      itemCount: isRecent || isMostly ? recentLength : songModel.length,
     );
   }
 }

@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:music_app/allsongs_screens/songstoplaylist.dart';
 import 'package:music_app/controller/get_all_song_controller.dart';
-import 'package:music_app/database/favoritedb.dart';
+import 'package:music_app/providers/favourite_db.dart';
 import 'package:on_audio_query/on_audio_query.dart';
+import 'package:provider/provider.dart';
 
 class PlayingControls extends StatefulWidget {
   const PlayingControls({
@@ -18,14 +19,18 @@ class PlayingControls extends StatefulWidget {
   final bool firstSong;
   final bool lastSong;
   final SongModel favSongModel;
+
   @override
   State<PlayingControls> createState() => _PlayingControlsState();
 }
 
 class _PlayingControlsState extends State<PlayingControls> {
   bool isPlaying = true;
+
   bool isShuffling = false;
+
   int currentIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -33,29 +38,27 @@ class _PlayingControlsState extends State<PlayingControls> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            ValueListenableBuilder(
-              valueListenable: FavoriteDb.favoriteSongs,
-              builder: (context, List<SongModel> favoritedata, child) {
+            Consumer<FavoriteDb>(
+              builder: (context, favoritedata, child) {
                 return IconButton(
                     onPressed: () {
-                      if (FavoriteDb.isFavor(widget.favSongModel)) {
-                        FavoriteDb.delete(widget.favSongModel.id);
+                      if (favoritedata.isFavor(widget.favSongModel)) {
+                        favoritedata.delete(widget.favSongModel.id);
                         const remove = SnackBar(
                           content: Text('Song removed from favorites'),
                           duration: Duration(seconds: 1),
                         );
                         ScaffoldMessenger.of(context).showSnackBar(remove);
                       } else {
-                        FavoriteDb.add(widget.favSongModel);
+                        favoritedata.add(widget.favSongModel);
                         const addFav = SnackBar(
                           content: Text('Song added to favorites'),
                           duration: Duration(seconds: 1),
                         );
                         ScaffoldMessenger.of(context).showSnackBar(addFav);
                       }
-                      FavoriteDb.favoriteSongs.notifyListeners();
                     },
-                    icon: FavoriteDb.isFavor(widget.favSongModel)
+                    icon: favoritedata.isFavor(widget.favSongModel)
                         ? const Icon(
                             Icons.favorite,
                             color: Colors.red,

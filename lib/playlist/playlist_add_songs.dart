@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:music_app/database/model_db.dart';
 import 'package:music_app/home_screen.dart';
-import 'package:music_app/playlist/playlist_db.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
-class PlaylistAddSong extends StatefulWidget {
-  const PlaylistAddSong({super.key, required this.playlist});
+// ignore: must_be_immutable
+class PlaylistAddSong extends StatelessWidget {
+  PlaylistAddSong({super.key, required this.playlist});
   final MusicWorld playlist;
-  @override
-  State<PlaylistAddSong> createState() => _PlaylistAddSongState();
-}
 
-class _PlaylistAddSongState extends State<PlaylistAddSong> {
   bool isPlaying = true;
   final OnAudioQuery audioQuery = OnAudioQuery();
   @override
@@ -93,18 +89,10 @@ class _PlaylistAddSongState extends State<PlaylistAddSong> {
                       height: 60,
                       width: 60,
                       child: Container(
-                        child: !widget.playlist.isValueIn(item.data![index].id)
+                        child: !playlist.isValueIn(item.data![index].id)
                             ? IconButton(
                                 onPressed: () {
-                                  setState(
-                                    () {
-                                      songAddToPlaylist(
-                                        item.data![index],
-                                      );
-                                      PlaylistDb.playlistNotifier
-                                          .notifyListeners();
-                                    },
-                                  );
+                                  songAddToPlaylist(item.data![index], context);
                                 },
                                 icon: Icon(
                                   Icons.add,
@@ -114,11 +102,8 @@ class _PlaylistAddSongState extends State<PlaylistAddSong> {
                               )
                             : IconButton(
                                 onPressed: () {
-                                  setState(
-                                    () {
-                                      songDeleteFromPlaylist(item.data![index]);
-                                    },
-                                  );
+                                  songDeleteFromPlaylist(
+                                      item.data![index], context);
                                 },
                                 icon: Icon(
                                   Icons.remove,
@@ -138,8 +123,8 @@ class _PlaylistAddSongState extends State<PlaylistAddSong> {
     );
   }
 
-  void songAddToPlaylist(SongModel data) {
-    widget.playlist.add(data.id);
+  void songAddToPlaylist(SongModel data, context) {
+    playlist.add(data.id);
     final addedToPlaylist = SnackBar(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(25),
@@ -157,8 +142,8 @@ class _PlaylistAddSongState extends State<PlaylistAddSong> {
     ScaffoldMessenger.of(context).showSnackBar(addedToPlaylist);
   }
 
-  void songDeleteFromPlaylist(SongModel data) {
-    widget.playlist.deleteData(data.id);
+  void songDeleteFromPlaylist(SongModel data, context) {
+    playlist.deleteData(data.id);
     final removePlaylist = SnackBar(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(25),

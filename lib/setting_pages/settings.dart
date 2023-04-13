@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:music_app/controller/get_all_song_controller.dart';
 import 'package:music_app/playlist/playlist_db.dart';
+import 'package:music_app/providers/playlist_provider.dart';
 import 'package:music_app/setting_pages/privacy_policy.dart';
 import 'package:music_app/setting_pages/terms_conditions.dart';
+import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -125,7 +127,8 @@ Your saved data will be deleted.
                       ),
                       TextButton(
                         onPressed: () {
-                          PlaylistDb.resetAPP(context);
+                          Provider.of<PlayListProvider>(context, listen: false)
+                              .resetAPP(context);
                           GetAllSongController.audioPlayer.stop();
                         },
                         child: const Text(

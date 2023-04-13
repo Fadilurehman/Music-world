@@ -2,24 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:music_app/database/model_db.dart';
 import 'package:music_app/home_screen.dart';
-import 'package:music_app/playlist/playlist_db.dart';
 import 'package:music_app/playlist/playlist_gridview.dart';
+import 'package:music_app/providers/playlist_provider.dart';
+import 'package:provider/provider.dart';
 
-class PlaylistPage extends StatefulWidget {
+class PlaylistPage extends StatelessWidget {
   const PlaylistPage({super.key});
-
-  @override
-  State<PlaylistPage> createState() => _PlaylistPageState();
-}
-
-GlobalKey<FormState> formKey = GlobalKey<FormState>();
-TextEditingController nameController = TextEditingController();
-
-class _PlaylistPageState extends State<PlaylistPage> {
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,9 +62,10 @@ class _PlaylistPageState extends State<PlaylistPage> {
       },
     );
   }
-
-  // New Playlist
 }
+
+GlobalKey<FormState> formKey = GlobalKey<FormState>();
+TextEditingController nameController = TextEditingController();
 
 Future newplaylist(BuildContext context, formKey) {
   return showDialog(
@@ -170,7 +159,11 @@ Future newplaylist(BuildContext context, formKey) {
 Future<void> saveButtonPressed(context) async {
   final name = nameController.text.trim();
   final music = MusicWorld(name: name, songId: []);
-  final datas = PlaylistDb.playlistDb.values.map((e) => e.name.trim()).toList();
+  final datas = Provider.of<PlayListProvider>(context, listen: false)
+      .playlistDb
+      .values
+      .map((e) => e.name.trim())
+      .toList();
   if (name.isEmpty) {
     return;
   } else if (datas.contains(music.name)) {
@@ -190,7 +183,7 @@ Future<void> saveButtonPressed(context) async {
     ScaffoldMessenger.of(context).showSnackBar(snackbar3);
     Navigator.of(context).pop();
   } else {
-    PlaylistDb.addPlaylist(music);
+    Provider.of<PlayListProvider>(context, listen: false).addPlaylist(music);
     final snackbar4 = SnackBar(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(25),

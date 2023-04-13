@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:music_app/allsongs_screens/songstoplaylist.dart';
 import 'package:music_app/controller/get_all_song_controller.dart';
-import 'package:music_app/database/favoritedb.dart';
 import 'package:music_app/playing_screen/now_playing.dart';
-import 'package:music_app/provider/song_model_provider.dart';
 import 'package:music_app/controller/recent_song_controller.dart';
+import 'package:music_app/providers/favourite_db.dart';
+import 'package:music_app/providers/recently_provider.dart';
+import 'package:music_app/song_provider/song_model_provider.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import '../home_screen.dart';
 
-class GridViewScreen extends StatefulWidget {
-  const GridViewScreen(
+class GridViewScreen extends StatelessWidget {
+  GridViewScreen(
       {super.key,
       required this.songModel,
       this.isRecent = false,
@@ -20,12 +21,8 @@ class GridViewScreen extends StatefulWidget {
   final dynamic recentLength;
   final bool isRecent;
 
-  @override
-  State<GridViewScreen> createState() => _GridViewScreenState();
-}
-
-class _GridViewScreenState extends State<GridViewScreen> {
   List<SongModel> allSongs = [];
+
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
@@ -33,25 +30,23 @@ class _GridViewScreenState extends State<GridViewScreen> {
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2, childAspectRatio: 1),
       itemBuilder: (context, index) {
-        allSongs.addAll(widget.songModel);
+        allSongs.addAll(songModel);
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: InkWell(
             onTap: () {
               GetAllSongController.audioPlayer.setAudioSource(
-                  GetAllSongController.createSongList(widget.songModel),
+                  GetAllSongController.createSongList(songModel),
                   initialIndex: index);
-              GetRecentSongController.addRecentlyPlayed(
-                  widget.songModel[index].id);
-              context
-                  .read<SongModelProvider>()
-                  .setId(widget.songModel[index].id);
+              Provider.of<Recentlyprovider>(context, listen: false)
+                  .addRecentlyPlayed(songModel[index].id);
+              context.read<SongModelProvider>().setId(songModel[index].id);
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => NowPlaying(
-                    songModel: widget.songModel,
-                    count: widget.songModel.length,
+                    songModel: songModel,
+                    count: songModel.length,
                   ),
                 ),
               );
@@ -78,7 +73,7 @@ class _GridViewScreenState extends State<GridViewScreen> {
                   Container(
                     margin: const EdgeInsets.all(10),
                     child: QueryArtworkWidget(
-                      id: widget.songModel[index].id,
+                      id: songModel[index].id,
                       type: ArtworkType.AUDIO,
                       artworkBorder: BorderRadius.circular(6),
                       artworkWidth: 80,
@@ -102,7 +97,7 @@ class _GridViewScreenState extends State<GridViewScreen> {
                     child: Container(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        widget.songModel[index].displayNameWOExt,
+                        songModel[index].displayNameWOExt,
                         maxLines: 1,
                         style: title,
                       ),
@@ -118,7 +113,7 @@ class _GridViewScreenState extends State<GridViewScreen> {
                           child: SizedBox(
                             width: MediaQuery.of(context).size.width * 1 / 4,
                             child: Text(
-                              widget.songModel[index].artist.toString(),
+                              songModel[index].artist.toString(),
                               maxLines: 1,
                               style: artistStyle,
                               overflow: TextOverflow.ellipsis,
@@ -127,16 +122,12 @@ class _GridViewScreenState extends State<GridViewScreen> {
                         ),
                         Expanded(
                           flex: 1,
-                          child: ValueListenableBuilder(
-                            valueListenable: FavoriteDb.favoriteSongs,
-                            builder:
-                                (context, List<SongModel> favoriteData, child) {
+                          child: Consumer<FavoriteDb>(
+                            builder: (context, favorite, child) {
                               return IconButton(
                                 onPressed: () {
-                                  if (FavoriteDb.isFavor(
-                                      widget.songModel[index])) {
-                                    FavoriteDb.delete(
-                                        widget.songModel[index].id);
+                                  if (favorite.isFavor(songModel[index])) {
+                                    favorite.delete(songModel[index].id);
                                     const remove = SnackBar(
                                       content:
                                           Text('Song removed from favorites'),
@@ -146,7 +137,7 @@ class _GridViewScreenState extends State<GridViewScreen> {
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(remove);
                                   } else {
-                                    FavoriteDb.add(widget.songModel[index]);
+                                    favorite.add(songModel[index]);
                                     const add = SnackBar(
                                       content: Text('Song added to favorites'),
                                       duration: Duration(seconds: 1),
@@ -154,18 +145,16 @@ class _GridViewScreenState extends State<GridViewScreen> {
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(add);
                                   }
-                                  FavoriteDb.favoriteSongs.notifyListeners();
                                 },
-                                icon:
-                                    FavoriteDb.isFavor(widget.songModel[index])
-                                        ? const Icon(
-                                            Icons.favorite,
-                                            color: Colors.redAccent,
-                                          )
-                                        : const Icon(
-                                            Icons.favorite_outline,
-                                            color: Colors.white,
-                                          ),
+                                icon: favorite.isFavor(songModel[index])
+                                    ? const Icon(
+                                        Icons.favorite,
+                                        color: Colors.redAccent,
+                                      )
+                                    : const Icon(
+                                        Icons.favorite_outline,
+                                        color: Colors.white,
+                                      ),
                               );
                             },
                           ),
@@ -188,10 +177,8 @@ class _GridViewScreenState extends State<GridViewScreen> {
                                               IconButton(
                                                   onPressed: () {
                                                     Navigator.pop(context);
-                                                    playlistDialogue(
-                                                        context,
-                                                        widget
-                                                            .songModel[index]);
+                                                    playlistDialogue(context,
+                                                        songModel[index]);
                                                   },
                                                   icon: const Icon(
                                                     Icons.playlist_add,
@@ -276,8 +263,7 @@ class _GridViewScreenState extends State<GridViewScreen> {
           ),
         );
       },
-      itemCount:
-          widget.isRecent ? widget.recentLength : widget.songModel.length,
+      itemCount: isRecent ? recentLength : songModel.length,
     );
   }
 }

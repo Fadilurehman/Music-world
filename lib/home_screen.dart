@@ -3,7 +3,6 @@ import 'package:music_app/Mostly_played/mostly_played.dart';
 import 'package:music_app/allsongs_screens/all_songs.dart';
 import 'package:music_app/playlist/play_list.dart';
 import 'package:music_app/sections/favourites.dart';
-
 import 'package:music_app/recent/recently_played.dart';
 import 'package:music_app/sections/search.dart';
 import 'package:music_app/setting_pages/settings.dart';
@@ -73,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
           elevation: 0,
         ),
-        body: const TabBarView(
+        body: TabBarView(
           children: [
             AllSongs(),
             RecentlyPlayed(),

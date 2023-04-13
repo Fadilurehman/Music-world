@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:music_app/controller/get_all_song_controller.dart';
-import 'package:music_app/controller/recent_song_controller.dart';
 import 'package:music_app/home_screen.dart';
 import 'package:music_app/playing_screen/now_playing.dart';
+import 'package:provider/provider.dart';
 
 import 'package:text_scroll/text_scroll.dart';
+
+import '../providers/recently_provider.dart';
 
 class MiniPlayer extends StatefulWidget {
   const MiniPlayer({
@@ -145,8 +147,9 @@ class _MiniPlayerState extends State<MiniPlayer> {
                         : IconButton(
                             iconSize: 32,
                             onPressed: () async {
-                              GetRecentSongController.addRecentlyPlayed(
-                                  GetAllSongController
+                              Provider.of<Recentlyprovider>(context,
+                                      listen: false)
+                                  .addRecentlyPlayed(GetAllSongController
                                       .playingsong[GetAllSongController
                                           .audioPlayer.currentIndex!]
                                       .id);
@@ -204,8 +207,8 @@ class _MiniPlayerState extends State<MiniPlayer> {
                     IconButton(
                       iconSize: 35,
                       onPressed: () async {
-                        GetRecentSongController.addRecentlyPlayed(
-                            GetAllSongController
+                        Provider.of<Recentlyprovider>(context, listen: false)
+                            .addRecentlyPlayed(GetAllSongController
                                 .playingsong[GetAllSongController
                                     .audioPlayer.currentIndex!]
                                 .id);
