@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:music_app/database/model_db.dart';
-import 'package:music_app/playlist/play_list.dart';
+import 'package:music/database/model_db.dart';
+import 'package:music/playlist/play_list.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
 playlistDialogue(BuildContext context, SongModel songModel) {

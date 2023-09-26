@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart%20';
-import 'package:music_app/providers/favourite_db.dart';
+import 'package:music/providers/favourite_db.dart';
 import 'package:provider/provider.dart';
 
 import '../database/model_db.dart';

@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:just_audio_background/just_audio_background.dart';
-import 'package:music_app/controller/recent_song_controller.dart';
-import 'package:music_app/database/model_db.dart';
-import 'package:music_app/providers/all_song_provider.dart';
-import 'package:music_app/providers/favourite_db.dart';
-import 'package:music_app/providers/mostly_played_provider.dart';
-import 'package:music_app/providers/playlist_provider.dart';
-import 'package:music_app/providers/recently_provider.dart';
-import 'package:music_app/splash_screen/splash.dart';
+import 'package:music/database/model_db.dart';
+import 'package:music/providers/all_song_provider.dart';
+import 'package:music/providers/favourite_db.dart';
+import 'package:music/providers/mostly_played_provider.dart';
+import 'package:music/providers/playlist_provider.dart';
+import 'package:music/providers/recently_provider.dart';
+import 'package:music/splash_screen/splash.dart';
 import 'package:provider/provider.dart';
 
 import 'song_provider/song_model_provider.dart';

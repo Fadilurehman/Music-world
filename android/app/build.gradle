@@ -13,12 +13,12 @@ if (flutterRoot == null) {
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
-    flutterVersionCode = '1'
+    flutterVersionCode = '3'
 }
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
-    flutterVersionName = '1.0'
+    flutterVersionName = '3.1'
 }
 
 apply plugin: 'com.android.application'
@@ -50,13 +50,13 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "in.brototype.Music_World"
+        applicationId "in.fadilu.Music_World"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion flutter.minSdkVersion
         targetSdkVersion flutter.targetSdkVersion
-        versionCode 2
-        versionName "1.0.1"
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
         multiDexEnabled true
     }
 
@@ -88,7 +88,7 @@ flutter {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.google.android.material:material:1.8.0'
-     implementation('androidx.lifecycle:lifecycle-viewmodel:2.5.1')
+    implementation('androidx.lifecycle:lifecycle-viewmodel:2.5.1')
     implementation('androidx.lifecycle:lifecycle-livedata:2.5.1')
     // exclude the lifecycle-viewmodel-ktx dependency
     implementation('androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1') {

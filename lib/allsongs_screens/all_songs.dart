@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:music_app/allsongs_screens/gridview_song.dart';
-import 'package:music_app/allsongs_screens/lists_view_songs.dart';
-import 'package:music_app/providers/all_song_provider.dart';
-import 'package:music_app/controller/get_all_song_controller.dart';
-import 'package:music_app/home_screen.dart';
-import 'package:music_app/providers/favourite_db.dart';
+import 'package:music/allsongs_screens/gridview_song.dart';
+import 'package:music/allsongs_screens/lists_view_songs.dart';
+import 'package:music/providers/all_song_provider.dart';
+import 'package:music/controller/get_all_song_controller.dart';
+import 'package:music/home_screen.dart';
+import 'package:music/providers/favourite_db.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 import 'mini_player.dart';

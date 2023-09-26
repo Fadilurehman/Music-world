@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:music_app/allsongs_screens/lists_view_songs.dart';
-import 'package:music_app/providers/mostly_played_provider.dart';
+import 'package:music/allsongs_screens/lists_view_songs.dart';
+import 'package:music/providers/mostly_played_provider.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 import '../providers/favourite_db.dart';

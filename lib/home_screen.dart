@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:music_app/Mostly_played/mostly_played.dart';
-import 'package:music_app/allsongs_screens/all_songs.dart';
-import 'package:music_app/playlist/play_list.dart';
-import 'package:music_app/sections/favourites.dart';
-import 'package:music_app/recent/recently_played.dart';
-import 'package:music_app/sections/search.dart';
-import 'package:music_app/setting_pages/settings.dart';
+import 'package:music/Mostly_played/mostly_played.dart';
+import 'package:music/allsongs_screens/all_songs.dart';
+import 'package:music/playlist/play_list.dart';
+import 'package:music/sections/favourites.dart';
+import 'package:music/recent/recently_played.dart';
+import 'package:music/sections/search.dart';
+import 'package:music/setting_pages/settings.dart';
 
 BoxDecoration bodyDecoration = const BoxDecoration(color: Colors.white);
 
@@ -76,10 +76,10 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             AllSongs(),
             RecentlyPlayed(),
-            MostlyPlayed(),
-            Favourites(),
-            PlaylistPage(),
-            SettingsScreen()
+            const MostlyPlayed(),
+            const Favourites(),
+            const PlaylistPage(),
+            const SettingsScreen()
           ],
         ),
       ),

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:music_app/database/model_db.dart';
-import 'package:music_app/home_screen.dart';
-import 'package:music_app/playlist/playlist_gridview.dart';
-import 'package:music_app/providers/playlist_provider.dart';
+import 'package:music/database/model_db.dart';
+import 'package:music/home_screen.dart';
+import 'package:music/playlist/playlist_gridview.dart';
+import 'package:music/providers/playlist_provider.dart';
 import 'package:provider/provider.dart';
 
 class PlaylistPage extends StatelessWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:music_app/controller/get_all_song_controller.dart';
-import 'package:music_app/playing_screen/player_widget.dart';
+import 'package:music/controller/get_all_song_controller.dart';
+import 'package:music/playing_screen/player_widget.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:text_scroll/text_scroll.dart';
 

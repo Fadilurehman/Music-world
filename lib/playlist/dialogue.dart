@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:music_app/database/model_db.dart';
+import 'package:music/database/model_db.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/playlist_provider.dart';

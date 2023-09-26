@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:music_app/allsongs_screens/lists_view_songs.dart';
+import 'package:music/allsongs_screens/lists_view_songs.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
 class SearchScreen extends StatefulWidget {

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:music_app/allsongs_screens/lists_view_songs.dart';
-import 'package:music_app/controller/recent_song_controller.dart';
-import 'package:music_app/providers/favourite_db.dart';
-import 'package:music_app/providers/recently_provider.dart';
+import 'package:music/allsongs_screens/lists_view_songs.dart';
+import 'package:music/providers/favourite_db.dart';
+import 'package:music/providers/recently_provider.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 

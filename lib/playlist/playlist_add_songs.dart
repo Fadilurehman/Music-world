@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:music_app/database/model_db.dart';
-import 'package:music_app/home_screen.dart';
+import 'package:music/database/model_db.dart';
+import 'package:music/home_screen.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
 // ignore: must_be_immutable

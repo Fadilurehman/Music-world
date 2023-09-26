@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:music_app/allsongs_screens/songstoplaylist.dart';
-import 'package:music_app/controller/get_all_song_controller.dart';
-import 'package:music_app/playing_screen/now_playing.dart';
-import 'package:music_app/controller/recent_song_controller.dart';
-import 'package:music_app/providers/favourite_db.dart';
-import 'package:music_app/providers/recently_provider.dart';
-import 'package:music_app/song_provider/song_model_provider.dart';
+import 'package:music/allsongs_screens/songstoplaylist.dart';
+import 'package:music/controller/get_all_song_controller.dart';
+import 'package:music/playing_screen/now_playing.dart';
+import 'package:music/providers/favourite_db.dart';
+import 'package:music/providers/recently_provider.dart';
+import 'package:music/song_provider/song_model_provider.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import '../home_screen.dart';
 
+// ignore: must_be_immutable
 class GridViewScreen extends StatelessWidget {
   GridViewScreen(
       {super.key,
