@@ -100,8 +100,8 @@ class AllSongs extends StatelessWidget {
             child: Column(
               children: [
                 if (GetAllSongController.audioPlayer.currentIndex != null)
-                  Column(
-                    children: const [MiniPlayer()],
+                  const Column(
+                    children: [MiniPlayer()],
                   )
                 else
                   const SizedBox()
